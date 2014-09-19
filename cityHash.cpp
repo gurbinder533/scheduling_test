@@ -60,30 +60,25 @@ int main()
 	std::vector<bool> flag_exit(num_children);
 	std::cout << "Parent waiting for children to die\n";
 	std::vector<int> wpid_vec(num_children);
+
 //	sleep(1000);
-/*	while(1) {
-			
+	int good, bad;
+	while(1) {
+		
+		good = bad = 0;		
 	//	std::cout << "in while wait \n";
 		for(int i = 0 ; i < TID_vec.size(); ++i) {
-			wpid_vec[i] = waitpid(TID_vec[i], &result, WNOHANG|__WCLONE);
+			if((wpid_vec[i] = waitpid(TID_vec[i], &result, WNOHANG|__WCLONE)) == -1)
+				++bad;	
 			if(wpid_vec[i] == TID_vec[i]) {
-				flag_exit[i] = true;	
+				++good;	
 			}
-			else flag_exit[i] = false;
 		}
 		
-		bool done = true;
-		for(auto i = 0 ; i < flag_exit.size(); ++i) {
-			if(!(flag_exit[i])) {
-				done = false;
-				break;
-			}	
-		}
-
-		if(done) 
+		if( good == num_children || bad == num_children)
 			break;
 	}
-*/
+
 /*	char buff[4096];
 	int len = 4096;
 	file.read(buff, 4096);
