@@ -1,0 +1,4 @@
+cityHash.cpp: In function ‘int main()’:
+cityHash.cpp:76:9: error: no match for ‘operator*’ (operand type is ‘std::_Bit_reference’)
+    if(!(*ii)) {
+         ^
