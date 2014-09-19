@@ -11,32 +11,36 @@
 #include <sys/wait.h>
 #include <vector>
 #include <sstream>
-#define CHILD_STACK 4096
+#define CHILD_STACK 8192
 
 void *stack;
 volatile bool start;
 
+std::ifstream file;
+
 int hash_func(void* arg){
 	while(!start)
 	{
-		std::cout << "waiting for all I am :" << getpid()<<"\n"; 
+	//	std::cout << "waiting for all I am :" << getpid()<<"\n"; 
 	}
 	int a = 0;
 	//std::cout << "pid : " << getpid()<<"\n";
 	/* calculate hash128 */
-	/*char buff[4096];
+	char buff[4096];
 	file.read(buff, 4096);
- 	const uint128 h = CityHash128(buff, 4096);	
-	*/
-	//std::cout<<"THRD ID :" << getpid() << " hashed Val : "<< h.first << "\n";
-	std::cout <<" I am done\n";
+	time_t end = time(NULL) + 5;
+	int count = 0;
+	while(time(NULL) <= end) {
+ 		const uint128 h = CityHash128(buff, 4096);	
+		++count;
+	}
+	
+	std::cout<<"THRD ID :" << getpid() << " Count : "<< count << "\n";
+	//std::cout <<" I am done\n";
 	exit(1);
 }
 int main(int argc, char *argv[])
 {	
-	
-	
-	std::ifstream file;
 	start = false;
 	file.open("dev/urandom");
 		
@@ -60,7 +64,7 @@ int main(int argc, char *argv[])
 
 		int thrd_id = clone(&hash_func, (char*)stack+CHILD_STACK, CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND, 0);
 		TID_vec.push_back(thrd_id);
-		std::cout<<"Thread id : " << thrd_id <<"\n";
+		//std::cout<<"Thread id : " << thrd_id <<"\n";
 	}
 	
 	start = true;
