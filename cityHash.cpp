@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <vector>
+#include <sstream>
 #define CHILD_STACK 4096
 
 void *stack;
@@ -31,13 +32,20 @@ int hash_func(void* arg){
 	std::cout <<" I am done\n";
 	exit(1);
 }
-int main()
+int main(int argc, char *argv[])
 {	
+	
+	
 	std::ifstream file;
 	start = false;
 	file.open("dev/urandom");
 		
-	int num_children = 5;
+	int num_children = 2;
+	if(argc >=2 ) {
+		std::istringstream ss(argv[1]);
+		if(!(ss >> num_children)) 
+			std::cerr << "Oops.. Invalid number or something..."<< argv[1] << "\n";
+	}
 	size_t len1 = 44;
 	std::vector<void*> stack_vec;
 	std::vector<int> TID_vec;
