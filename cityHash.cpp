@@ -43,6 +43,17 @@ int hash_func(void* arg){
 }
 int main(int argc, char *argv[])
 {	
+	/**
+	 * set CPU affinity 
+	 **/
+	//XXX Is it inhereted by children ??
+	cpu_set_t mask;
+	CPU_ZERO(&mask); // initialize mask to ZERO 
+	CPU_SET(0, &mask); // Use processor 0
+	if(sched_setaffinity(0, sizeof(mask), &mask)) {
+		perror("sched_setaffinity"); // Always check for errors
+	}
+
 	start_hash = false;
 	file.open("dev/urandom");
 	int bg_processes = 0 ;		
