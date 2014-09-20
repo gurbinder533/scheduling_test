@@ -11,15 +11,17 @@
 #include <sys/wait.h>
 #include <vector>
 #include <sstream>
+#include "backgroundTask.c"
+
 #define CHILD_STACK 8192
 
 void *stack;
-volatile bool start;
+volatile bool start_hash;
 
 std::ifstream file;
 
 int hash_func(void* arg){
-	while(!start)
+	while(!start_hash)
 	{
 	//	std::cout << "waiting for all I am :" << getpid()<<"\n"; 
 	}
@@ -41,14 +43,19 @@ int hash_func(void* arg){
 }
 int main(int argc, char *argv[])
 {	
-	start = false;
+	start_hash = false;
 	file.open("dev/urandom");
-		
+	int bg_processes = 0 ;		
 	int num_children = 2;
 	if(argc >=2 ) {
 		std::istringstream ss(argv[1]);
 		if(!(ss >> num_children)) 
 			std::cerr << "Oops.. Invalid number or something..."<< argv[1] << "\n";
+		if(argc >=3) {
+		    std::istringstream ss2(argv[2]); // background process.
+		    if(!(ss2 >> bg_processes))
+			    std::cerr << "Oops.. Invalid number or something..."<< argv[2] << "\n";
+	        }
 	}
 	size_t len1 = 44;
 	std::vector<void*> stack_vec;
@@ -66,8 +73,15 @@ int main(int argc, char *argv[])
 		TID_vec.push_back(thrd_id);
 		//std::cout<<"Thread id : " << thrd_id <<"\n";
 	}
+
+	// start background processes 
+	if(bg_processes > 0) {
+	    start(bg_processes);
+	}
+
+
 	
-	start = true;
+	start_hash = true;
 	int wpid, result, noresult, status;
 	std::vector<bool> flag_exit(num_children);
 	std::cout << "Parent waiting for children to die\n";
@@ -91,6 +105,15 @@ int main(int argc, char *argv[])
 			break;
 	}
 
+
+	// Kill ba_processes 
+	if(bg_processes > 0) {
+	    stop();
+	}
+    
+
+
+	
 /*	char buff[4096];
 	int len = 4096;
 	file.read(buff, 4096);
