@@ -14,7 +14,7 @@ int start(int numProcesses)
 	}
 	NUMPROCESSES = numProcesses;
 
-	processIds = malloc(NUMPROCESSES * sizeof(pid_t));
+	processIds =(pid_t*) malloc(NUMPROCESSES * sizeof(pid_t));
 	if(processIds == NULL)
 	{
 		printf("Unable to allocate space for processId array.\n");
