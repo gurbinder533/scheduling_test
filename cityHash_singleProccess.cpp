@@ -1,3 +1,10 @@
+/**
+ *   Code: Single process to compute CityHash128().
+ *   Author: Gurbinder Singh Gill
+ *   UTID: GSG466
+ *   email: gill@cs.utexas.edu
+ */
+ 
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -7,7 +14,7 @@
 int main()
 {	
 	std::ifstream file("dev/urandom");
-	char buff[4096];// = new char[4096];
+	char buff[4096];
 	int len = 4096;
 	file.read(buff, 4096);
 	int i = 1000000;
@@ -18,6 +25,5 @@ int main()
 		++count;
 	}
 	std::cout << "count : " << count <<"\n";
-//	std::cout<<"hashed : "<< hashed.first << "\n";
 	file.close();
 }

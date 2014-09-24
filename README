@@ -1,0 +1,51 @@
+/**
+ *   README for compiling and running cityHash.cpp and cityHash_singleProcess.cpp
+ *   Author: Gurbinder Singh Gill
+ *   UTID: GSG466
+ *   email: gill@cs.utexas.edu
+ */
+
+
+
+## compiling:
+
+    #Assuming that cityhash is installed and corresponding files are included using -I and -L flags. Default installation locations /usr/local/include and /usr/local/lib 
+
+        #cityHash_singleProcess.cpp 
+        
+            g++ -std=gnu++11 -I /path/to/include/ -L/path/to/lib  cityHash_singleProccess.cpp -o city_single -lcityhash    
+
+
+
+        #cityHash.cpp
+    
+            g++ -std=gnu++11 -I /path/to/include/ -L/path/to/lib  cityHash.cpp -o city -lcityhash -Dflags
+            
+            I have used preprocessor directives to disable and enable different functionality for testing different scenarios. 
+
+            Following -D flags are available:    
+
+            1. with_time : (default) To measure the time for 3 million hashes
+            2. with_count : To fix time (approx. 5 sec and measure number of hashes computed 
+            3. enable_fair_sleep : To enable sleep method to improve fairness
+            4. enable_fair_yield : To enable sched_yield method to improve fairness
+            5. enable_setscheduler : To enable sched_setscheduler (enable Round Robin) to improve fairness
+            6. cpu_aff : To pin processes to different physical cores (2 in my case)
+            7. enable_cg : To enable cgroup optimization for throughput improvement
+
+
+
+## Running:
+    
+        # cityHash_singleProcess.cpp 
+            
+            ./city_single
+
+        
+        
+        # cityHash.cpp
+            
+            ./city n m 
+
+            n : Cloned hashing processes
+            m : Background processes
